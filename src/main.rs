@@ -1,24 +1,29 @@
 mod error;
 mod github;
 
+use std::time::Duration;
+
 use crate::error::ReleaseError;
 use crate::error::Result;
 use crate::github::Semver;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let token = std::env::var("GH_TOKEN").map_err(|_| ReleaseError::MissingAuthToken)?;
+
     let octo = octocrab::OctocrabBuilder::new()
-         // token sys-octo-test 
-        .personal_token("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".to_string())
-    .build()
+        // token sys-octo-test
+        .personal_token(token.to_string())
+        .build()
         .map_err(|_| ReleaseError::GitHubAPI)?;
 
     let repo = octo.repos("toidiu", "s2n-release");
 
-    let _latest = github::release_latest(&repo).await?;
+    let semver = Semver::new(0, 3, 0);
+    github::release_create(&repo, semver).await?;
 
-    let semver = Semver::new(0, 2, 0);
-    // github::release_create(&repo, semver).await?;
+    tokio::time::sleep(Duration::from_secs(1)).await;
+    let _latest = github::release_latest(&repo).await?;
 
     Ok(())
 }
