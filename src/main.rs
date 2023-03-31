@@ -17,8 +17,8 @@ async fn main() -> Result<()> {
 
     let _latest = github::release_latest(&repo).await?;
 
-    let semver = Semver::new(0, 1, 0);
-    github::release_create(&repo, semver).await?;
+    let semver = Semver::new(0, 2, 0);
+    // github::release_create(&repo, semver).await?;
 
     Ok(())
 }

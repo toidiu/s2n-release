@@ -37,9 +37,9 @@ pub async fn release_latest(repo: &RepoHandler<'_>) -> Result<Option<Semver>> {
 
 pub async fn release_create(repo: &RepoHandler<'_>, semver: Semver) -> Result<()> {
     repo.releases()
-        .create(&semver.to_string())
+        .create(&semver.version_string())
         .target_commitish("main")
-        .name(&semver.to_string())
+        .name(&semver.version_string())
         .body("body")
         .prerelease(false)
         .draft(false)
@@ -64,11 +64,9 @@ impl Semver {
             major,
         }
     }
-}
 
-impl ToString for Semver {
-    fn to_string(&self) -> String {
-        format!("{}.{}.{}", self.major, self.minor, self.patch)
+    pub fn version_string(&self) -> String {
+        format!("v{}.{}.{}", self.major, self.minor, self.patch)
     }
 }
 
