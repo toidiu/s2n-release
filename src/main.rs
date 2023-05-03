@@ -2,7 +2,6 @@ mod error;
 mod github;
 
 use std::time::Duration;
-
 use crate::error::ReleaseError;
 use crate::error::Result;
 use crate::github::Semver;
